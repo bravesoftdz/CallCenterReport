@@ -278,7 +278,6 @@ type
     procedure Button25Click(Sender: TObject);
     procedure StringGrid5Click(Sender: TObject);
     procedure limpiarDatos(Sender: TObject);
-    procedure Button35Click(Sender: TObject);
   private
     { Private declarations }
     TabAnterior: integer;  // Control del PageControl
@@ -387,8 +386,8 @@ end;
 
 procedure TForm1.Button27Click(Sender: TObject);
 begin
-  Application.CreateForm(TPagesDlg1, PagesDlg1);
-  PagesDlg1.Show;
+  Application.CreateForm(TPagesDlg2, PagesDlg2);
+  PagesDlg2.Show;
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
@@ -413,12 +412,6 @@ begin
   QExport4XLS3.FileName := Path + '\Distribucion.xls';
   QExport4XLS3.Sheets[0].Exported := true;
   QExport4XLS3.Execute;
-end;
-
-procedure TForm1.Button35Click(Sender: TObject);
-begin
-  Application.CreateForm(TPagesDlg2, PagesDlg2);
-  PagesDlg2.Show;
 end;
 
 procedure TForm1.Button3Click(Sender: TObject);

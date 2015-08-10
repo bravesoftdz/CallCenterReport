@@ -146,9 +146,9 @@ type
     TabSheet9: TTabSheet;
     ScrollBox4: TScrollBox;
     Chart6: TChart;
-    Series6: TBarSeries;
-    Chart7: TChart;
     Series7: TBarSeries;
+    Chart7: TChart;
+    Series8: TBarSeries;
     CategoryPanelGroup4: TCategoryPanelGroup;
     CategoryPanel6: TCategoryPanel;
     Button27: TButton;
@@ -200,17 +200,17 @@ type
     Button37: TButton;
     Button38: TButton;
     Series9: TBarSeries;
-    Series8: TBarSeries;
+    Series6: TBarSeries;
     Chart10: TChart;
     Series11: TBarSeries;
     Chart11: TChart;
     Series12: TBarSeries;
     Chart12: TChart;
     Series13: TBarSeries;
-    Chart14: TChart;
-    Series15: TBarSeries;
     Chart13: TChart;
     Series14: TBarSeries;
+    Chart14: TChart;
+    Series15: TBarSeries;
     QExport4XLS3: TQExport4XLS;
     Button39: TButton;
     Button40: TButton;
@@ -278,7 +278,6 @@ type
     procedure Button25Click(Sender: TObject);
     procedure StringGrid5Click(Sender: TObject);
     procedure limpiarDatos(Sender: TObject);
-    procedure Button35Click(Sender: TObject);
   private
     { Private declarations }
     TabAnterior: integer;  // Control del PageControl
@@ -387,8 +386,8 @@ end;
 
 procedure TForm1.Button27Click(Sender: TObject);
 begin
-  Application.CreateForm(TPagesDlg1, PagesDlg1);
-  PagesDlg1.Show;
+  Application.CreateForm(TPagesDlg2, PagesDlg2);
+  PagesDlg2.Show;
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
@@ -413,12 +412,6 @@ begin
   QExport4XLS3.FileName := Path + '\Distribucion.xls';
   QExport4XLS3.Sheets[0].Exported := true;
   QExport4XLS3.Execute;
-end;
-
-procedure TForm1.Button35Click(Sender: TObject);
-begin
-  Application.CreateForm(TPagesDlg2, PagesDlg2);
-  PagesDlg2.Show;
 end;
 
 procedure TForm1.Button3Click(Sender: TObject);
@@ -551,9 +544,9 @@ begin
       end;
     end;
 
-    if (FindComponent('Chart' + IntToStr(h)) is TScrollbox) then
+    if (FindComponent('Scrollbox' + IntToStr(h)) is TScrollbox) then
     begin
-      with TScrollbox(FindComponent('Chart' + IntToStr(h))) do
+      with TScrollbox(FindComponent('Scrollbox' + IntToStr(h))) do
         VertScrollBar.Position := 0;
     end;
   end;
@@ -569,13 +562,6 @@ begin
       RedrawWindow( Handle, nil, 0, RDW_ERASE or RDW_FRAME or RDW_INVALIDATE or RDW_ALLCHILDREN );
     end;
   end;
-
-  if PageControl1.ActivePage = TabSheet2 then
-    Chart_1 := TChart(FindComponent('Chart' + IntToStr(TButton(Sender).Tag)))
-  else if PageControl1.ActivePage = TabSheet3 then
-    Chart_2 := TChart(FindComponent('Chart' + IntToStr(TButton(Sender).Tag)))
-  else if PageControl1.ActivePage = TabSheet4 then
-    Chart_3 := TChart(FindComponent('Chart' + IntToStr(TButton(Sender).Tag)));
 
 end;
 
@@ -855,20 +841,17 @@ begin
     StatusBar2.Panels[0].Text := Grid1.Hint;
     Grid1.Visible := True;
     //Grid1.Align := alClient;
-    Chart_1 := Chart1;
-    Chart_1.Visible:=True;
+    Chart1.Visible:=True;
 
     Grid2 := StringGrid6;
     Grid2.Visible := True;
     //Grid2.Align := alClient;
-    Chart_2 := Chart6;
-    Chart_2.Visible:=True;
+    Chart6.Visible:=True;
 
     Grid3 := StringGrid9;
     Grid3.Visible := True;
     //Grid3.Align := alClient;
-    Chart_3 := Chart8;
-    Chart_3.Visible:=True;
+    Chart6.Visible:=True;
 
 end;
 
@@ -1146,7 +1129,6 @@ begin
 
   Grid1.Visible := True;
   StatusBar2.Panels[0].Text := Grid1.Hint;
-  Chart_1.Visible := True;
 
 
   StrGrid := TAssoc.Create(False);
@@ -1253,7 +1235,6 @@ begin
 
   Grid2.Visible := True;
   StatusBar3.Panels[0].Text := Grid2.Hint;
-  Chart_2.Visible := True;
 
 
   with StringGrid6 do
@@ -1313,7 +1294,6 @@ begin
 
   Grid3.Visible := True;
   StatusBar4.Panels[0].Text := Grid3.Hint;
-  Chart_3.Visible := True;
 
   with StringGrid9 do
   begin

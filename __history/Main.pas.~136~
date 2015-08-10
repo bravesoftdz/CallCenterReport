@@ -146,9 +146,9 @@ type
     TabSheet9: TTabSheet;
     ScrollBox4: TScrollBox;
     Chart6: TChart;
-    Series6: TBarSeries;
-    Chart7: TChart;
     Series7: TBarSeries;
+    Chart7: TChart;
+    Series8: TBarSeries;
     CategoryPanelGroup4: TCategoryPanelGroup;
     CategoryPanel6: TCategoryPanel;
     Button27: TButton;
@@ -200,17 +200,17 @@ type
     Button37: TButton;
     Button38: TButton;
     Series9: TBarSeries;
-    Series8: TBarSeries;
+    Series6: TBarSeries;
     Chart10: TChart;
     Series11: TBarSeries;
     Chart11: TChart;
     Series12: TBarSeries;
     Chart12: TChart;
     Series13: TBarSeries;
-    Chart14: TChart;
-    Series15: TBarSeries;
     Chart13: TChart;
     Series14: TBarSeries;
+    Chart14: TChart;
+    Series15: TBarSeries;
     QExport4XLS3: TQExport4XLS;
     Button39: TButton;
     Button40: TButton;
@@ -278,7 +278,6 @@ type
     procedure Button25Click(Sender: TObject);
     procedure StringGrid5Click(Sender: TObject);
     procedure limpiarDatos(Sender: TObject);
-    procedure Button35Click(Sender: TObject);
   private
     { Private declarations }
     TabAnterior: integer;  // Control del PageControl
@@ -387,8 +386,8 @@ end;
 
 procedure TForm1.Button27Click(Sender: TObject);
 begin
-  Application.CreateForm(TPagesDlg1, PagesDlg1);
-  PagesDlg1.Show;
+  Application.CreateForm(TPagesDlg2, PagesDlg2);
+  PagesDlg2.Show;
 end;
 
 procedure TForm1.Button2Click(Sender: TObject);
@@ -413,12 +412,6 @@ begin
   QExport4XLS3.FileName := Path + '\Distribucion.xls';
   QExport4XLS3.Sheets[0].Exported := true;
   QExport4XLS3.Execute;
-end;
-
-procedure TForm1.Button35Click(Sender: TObject);
-begin
-  Application.CreateForm(TPagesDlg2, PagesDlg2);
-  PagesDlg2.Show;
 end;
 
 procedure TForm1.Button3Click(Sender: TObject);
@@ -551,9 +544,9 @@ begin
       end;
     end;
 
-    if (FindComponent('Chart' + IntToStr(h)) is TScrollbox) then
+    if (FindComponent('Scrollbox' + IntToStr(h)) is TScrollbox) then
     begin
-      with TScrollbox(FindComponent('Chart' + IntToStr(h))) do
+      with TScrollbox(FindComponent('Scrollbox' + IntToStr(h))) do
         VertScrollBar.Position := 0;
     end;
   end;

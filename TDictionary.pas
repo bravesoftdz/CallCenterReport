@@ -1,0 +1,185 @@
+unit TDictionary;
+
+interface
+
+uses System.Generics.Collections, System.SysUtils;
+
+type TAssoc = class
+  private
+    fVal: Variant;
+    fStrict: Boolean;
+    fDict: TDictionary<Variant,TAssoc>;
+    function GetItem(Index: Variant): TAssoc;
+    procedure SetVal(v: Variant);
+    function GetVal:Variant;
+  public
+    /// <summary>
+    ///   Returns the TAssocnode by default allowing you to chain Nodes
+    /// </summary>
+    /// <param name="Index">
+    ///   Search index, can be any primitive type.
+    /// </param>
+    property Items[Index: Variant]: TAssoc read GetItem; default;
+
+    /// <summary>
+    ///   Use this to read and write a node value.
+    /// </summary>
+    /// <value>
+    ///   can be almost everything Try not to use objects in here.
+    /// </value>
+    property Val:Variant read GetVal write SetVal;
+
+    /// <summary>
+    ///   Gives you a direct link to the tdictionary object alowing you to
+    ///   itterate
+    /// </summary>
+    property All:TDictionary<Variant,TAssoc> read fDict;
+    /// <summary>
+    ///   <para>
+    ///     Usefull for creating keys in strict mode
+    ///   </para>
+    ///   <para>
+    ///     Array.add('key');<br />Array['key'].Val = 1;
+    ///   </para>
+    ///   <para>
+    ///     Wich would throw an error in strict mode as 'key' is not defined
+    ///     <br />In non strict mode it will just be created for you
+    ///   </para>
+    /// </summary>
+    function Add(Index: Variant):TAssoc; overload;
+    /// <summary>
+    ///   <para>
+    ///     Usefull for creating keys in strict mode and setting its value at the same time
+    ///   </para>
+    ///   <para>
+    ///     Array.add('key',1);<br />Array['key'].Val = 1;
+    ///   </para>
+    ///   <para>
+    ///     Wich would throw an error in strict mode as 'key' is not defined
+    ///     <br />In non strict mode it will just be created for you
+    ///   </para>
+    /// </summary>
+    function Add(Index: Variant; Value: Variant):TAssoc; overload;
+
+    /// <summary>
+    ///   Strictmode will raise an exception when you try to:<br />- set a nod
+    ///   that was already set instead of overwriting it.<br />- read a node
+    ///   that was nto set
+    /// </summary>
+    /// <param name="strictRules">
+    ///   Strictmode on of off
+    /// </param>
+    constructor Create(strictRules:Boolean);
+    destructor Free;
+
+    /// <summary>
+    ///   Clears all underlying nodes
+    /// </summary>
+    procedure Clear;
+end;
+
+type TAssocEnum = TPair<Variant, TAssoc>;
+
+implementation
+
+{ TAssoc }
+
+function TAssoc.Add(Index: Variant): TAssoc;
+begin
+  Result := nil;
+  if(fDict<>nil) then begin // see if dict is or can be made
+    if(fDict.ContainsKey(Index)) then begin // see if the key is in there
+      if(fStrict = true) then begin // duplicate keys not strict
+        raise Exception.Create('Dictionary is in strict mode, the key "'+Index+'" was already set.');
+      end;
+    end else begin // dict made, just not the key
+      Result := TAssoc.Create(fStrict);
+      fDict.Add(Index,Result);
+    end;
+  end else begin // dict not found
+    begin // make dict and key
+      fDict := TDictionary<Variant,TAssoc>.Create(1);
+      Result := TAssoc.Create(fStrict);
+      fDict.Add(Index,Result);
+    end;
+  end;
+end;
+
+function TAssoc.Add(Index, Value: Variant): TAssoc;
+begin
+  Result := Add(Index);
+  Result.Val := Value;
+end;
+
+procedure TAssoc.Clear;
+var
+  Enum: TPair<Variant, TAssoc>;
+begin
+  if(fDict<>nil) then begin
+    for Enum in fDict do begin
+      Enum.Value.Free;
+    end;
+  end;
+  fDict.Clear;
+end;
+
+constructor TAssoc.Create(strictRules:Boolean);
+begin
+  fStrict := strictRules;
+  fDict := nil;
+  TVarData(fVal).VType := varEmpty;
+end;
+
+destructor TAssoc.Free;
+var
+  Enum: TPair<Variant, TAssoc>;
+begin
+  if(fDict<>nil) then begin
+    for Enum in fDict do begin
+      Enum.Value.Free;
+    end;
+  end;
+end;
+
+function TAssoc.GetItem(Index: Variant): TAssoc;
+//var
+  //v: Variant;
+begin
+  Result := nil;
+  if(fdict<>nil) then begin // see if dict is or can be made
+    if(fDict.ContainsKey(Index)) then begin // see if the key is in there
+      Result := fDict.Items[Index];
+    end else begin // dict made, just not the key
+      if (fStrict) then begin
+        raise Exception.Create('Dictionary is in strict mode, the key "'+Index+'" was not set.');
+      end else begin // if not set, create the index and make it into a assocnode
+        Result := TAssoc.Create(fStrict);
+        fDict.Add(Index,Result);
+      end;
+    end;
+  end else begin // if the key is not in there see if strict or not
+    if(fStrict) then begin // if strict then error index not set
+      raise Exception.Create('Dictionary is in strict mode, the key "'+Index+'" was not set.');
+    end else begin // if not set, create the index and make it into a assocnode
+      fDict := TDictionary<Variant,TAssoc>.Create(1);
+      Result := TAssoc.Create(fStrict);
+      fDict.Add(Index,Result);
+    end;
+  end;
+end;
+
+function TAssoc.GetVal: Variant;
+begin Result := fVal; end;
+
+procedure TAssoc.SetVal(v: Variant);
+begin fVal := v; end;
+
+// todo:
+// make a kickass helper class
+// output xml/json
+// walk through tree
+// parentnode property?
+// make a delphi7 version using stringlist? (not worth it)
+// have fun
+
+end.
